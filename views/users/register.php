@@ -5,16 +5,24 @@
   <div class="panel-body">
     <form method="post" action="<?=ROOT_URL.'users/register' ?>">
     	<div class="form-group">
-    		<label>Name</label>
+    		<label for="name">Nombre
     		<input type="text" name="name" class="form-control" />
+            </label>
     	</div>
     	<div class="form-group">
-    		<label>Email</label>
-    		<input type="text" name="email" class="form-control" />
+    		<label for="email">Email
+    		<input type="email" name="email" class="form-control" />
+            </label>
     	</div>
+        <div class="form-group">
+            <label for="ciudad">Ciudad
+            <input type="text" name="ciudad" class="form-control" />
+            </label>
+        </div>
     	<div class="form-group">
-    		<label>Password</label>
+    		<label for="password">Contraseña
     		<input type="password" name="password" class="form-control" />
+            </label>
     	</div>
     	<input class="btn btn-primary" name="submit" type="submit" value="Submit" />
     </form>

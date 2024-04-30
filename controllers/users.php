@@ -16,5 +16,6 @@ class Users extends Controller{
 		session_destroy();
 		// Redirect
 		header('Location: '.ROOT_URL);
+        exit();
 	}
 }
