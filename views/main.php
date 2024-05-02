@@ -45,7 +45,7 @@
 <body>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="javascript:void(0)">Logo</a>
+            <a class="navbar-brand" href="<?php echo ROOT_URL?>">Logo</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -65,10 +65,8 @@
                                         Dropdown
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                                        <li><a><?php echo $_SESSION['user_data']['email']?></a></li>
-                                        <li><a class="dropdown-item" href="#">HAY QUE MODIFICAR PARA QUE TE LLEVE A TU CATALOGO</a></li>
-                                        <li><a class="dropdown-item" href="#"></a></li>
-                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        <li><a class="dropdown-item"><?php echo $_SESSION['user_data']['email']?></a></li>
+                                        <li><a class ="dropdown-item" href=<?php echo ROOT_URL.'/shares' ?>>Ir al catálogo</a></li>
                                         <li><a class="dropdown-item" href="<?php echo ROOT_URL;?>users/logout">Cerrar sesión</a></li>
                                     </ul>
                                 </li>

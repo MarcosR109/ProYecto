@@ -36,13 +36,13 @@ class Shares extends Controller
     }
     protected function viewFromGenre()
     {
-        $genre = $this->request["genero"];
+        $genre = $this->request["id"];
         $viewmodel = new ShareModel();
         $this->returnView($viewmodel->viewFromGenre($genre),true);
     }
     protected function viewFromMedium()
     {
-        $medium = $this->request["soporte"];
+        $medium = $this->request["id"];
         $viewmodel = new ShareModel();
         $this->returnView($viewmodel->viewFromMedium($medium),true);
     }

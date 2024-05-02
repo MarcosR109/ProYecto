@@ -1,7 +1,6 @@
+<head><link rel="stylesheet" href="../../assets/css/bootstrap.min.css"></head>
 <div>
-    <?php if (isset($_SESSION['is_logged_in'])): ?>
-        <a class="btn btn-success btn-share" href="<?php echo ROOT_PATH; ?>shares/add">Share Something</a>
-    <?php endif; ?>
+
 
     <div class="well">
         <div class="card">
@@ -21,4 +20,7 @@
         <a class="btn btn-default" href="<?php echo ROOT_PATH; ?>shares/view/<?= $viewmodel['id_obra'] ?>" target="_blank">Go
         </a>
     </div>
+    <?php if (isset($_SESSION['is_logged_in'])): ?>
+        <a class="btn btn-success btn-share" href="<?php echo ROOT_PATH; ?>shares/add">Share Something</a>
+    <?php endif; ?>
 </div>

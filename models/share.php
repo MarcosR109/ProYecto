@@ -66,7 +66,7 @@ class ShareModel extends Model
             $row = $this->single();
             return $row;
         }
-        return null;
+    return null;
     }
 
     public function trade($id = null)
@@ -88,16 +88,18 @@ class ShareModel extends Model
         return $rows;
     }
 
-    public function viewFromGenre($genre = null)
+    public function viewFromGenre($genre = "libre")
     {
-        $this->query("SELECT * FROM obra WHERE genero LIKE '%" . $genre . "%'");
+        $genre = trim($genre);
+        $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra FROM obra WHERE genero = '". $genre ."' ORDER BY GENERO");
         $rows = $this->resultSet();
         return $rows;
     }
 
     public function viewFromMedium($medium = null)
     {
-        $this->query("SELECT * FROM obra WHERE formato LIKE '%" . $medium . "%'");
+        $medium=trim($medium);
+        $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra FROM obra WHERE formato = '" . $medium . "'");
         $rows = $this->resultSet();
         return $rows;
     }
