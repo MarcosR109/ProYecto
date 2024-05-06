@@ -19,6 +19,10 @@
         <br/>
         <a class="btn btn-default" href="<?php echo ROOT_PATH; ?>shares/view/<?= $viewmodel['id_obra'] ?>" target="_blank">Go
         </a>
+        <?php if (isset($_SESSION['is_logged_in']) && $_SESSION['user_data']['idusuario'] == $viewmodel['usuario_idUsuario']) { ?>
+            <a class="btn btn-info" href="<?php echo ROOT_URL; ?>shares/update/<?= $viewmodel['id_obra'] ?>">Editar</a>
+            <a class="btn btn-danger" href="<?php echo ROOT_PATH; ?>shares/delete/<?= $viewmodel['id_obra'] ?>">Eliminar</a>
+        <?php } ?>
     </div>
     <?php if (isset($_SESSION['is_logged_in'])): ?>
         <a class="btn btn-success btn-share" href="<?php echo ROOT_PATH; ?>shares/add">Share Something</a>

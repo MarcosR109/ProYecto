@@ -1,17 +1,19 @@
 <?php
 
-class ShareModel extends Model
+class ShareModel extends model
 {
     public function index()
     {
-        $this->query('SELECT id_obra,titulo,descripcion,genero,formato, nombreobra FROM obra ORDER BY id_obra DESC');
+        $this->query('SELECT id_obra,titulo,descripcion,genero,formato, nombreobra, usuario.nombre, usuario_idUsuario
+            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario ORDER BY id_obra DESC');
         $rows = $this->resultSet();
         return $rows;
     }
 
     public function view($id = null)
     {
-        $this->query("SELECT id_obra,titulo,descripcion,genero,formato,nombreobra FROM obra where id_obra=$id");
+        $this->query("SELECT id_obra,titulo,descripcion,genero,formato,nombreobra, usuario.nombre
+            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario where id_obra=$id");
         $row = $this->single();
         return $row;
     }
@@ -23,141 +25,189 @@ class ShareModel extends Model
         return;
     }
 
+    public function indexUser($id = null, $idusuario = null, $idobra = null)
+    {
+        $this->query("SELECT id_obra,titulo,descripcion,genero,formato,nombreobra, usuario.nombre, usuario_idusuario
+            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario where usuario_idusuario=$id");
+        $rows = $this->resultSet();
+        return $rows;
+    }
 
     public function update($id = null)
     {
-        // Sanitize POST data
+        // Sanitize POST
         $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-        // Verificar si se envió el formulario de actualización
         if (isset($post['submit'])) {
-            // Verificar si los campos obligatorios están completos
-            if ($post['Titulo'] == '' || $post['Descripcion'] == '' || $post['Genero'] == '') {
-                Messages::setMsg('Por favor, complete todos los campos', 'error');
-                return;
+            if ($post['TITULO'] == '' || $post['DESCRIPCION'] == '') {
+                messages::setMsg('Porfavor añade un título y una descripción', 'error');
+                return null;
             }
 
-            try {
-                // Ejecutar la consulta de actualización
-                $this->query('UPDATE obra SET Titulo=:titulo, Descripcion=:descripcion, Formato=:formato, Genero=:genero WHERE ID_OBRA=:id');
-                $this->bind(':titulo', $post['Titulo']);
-                $this->bind(':descripcion', $post['Descripcion']);
-                $this->bind(':formato', $post['Formato']);
-                $this->bind(':genero', $post['Genero']);
-                $this->bind(':id', $id);
-                $result = $this->execute();
-
-                if ($result) {
-                    // Redireccionar al éxito
-                    header('Location: ' . ROOT_URL . 'shares');
-                    exit();
-                } else {
-                    // Manejar error si la ejecución de la consulta falló
-                    Messages::setMsg('Algo salió mal al actualizar el registro', 'error');
-                }
-            } catch (PDOException $e) {
-                // Manejar cualquier excepción de base de datos
-                Messages::setMsg('Error de base de datos: ' . $e->getMessage(), 'error');
-            }
-        } else {
-            // Recuperar el registro a actualizar
-            $this->query("SELECT * FROM obra WHERE ID_OBRA = :id");
+            // Insert into MySQL
+            $this->query('UPDATE obra SET titulo=:titulo, descripcion=:descripcion, formato=:formato, genero=:genero WHERE id_obra =:id');
+            $this->bind(':titulo', $post['TITULO']);
+            $this->bind(':descripcion', $post['DESCRIPCION']);
+            $this->bind(':formato', $post['FORMATO']);
+            $this->bind(':genero', $post['GENERO']);
             $this->bind(':id', $id);
+            $this->execute();
+
+            // Redirect
+            header('Location: ' . ROOT_URL . 'shares');
+        } else {
+            $this->query("SELECT ID_OBRA,TITULO,DESCRIPCION,FORMATO,GENERO FROM obra where id_OBRA=$id");
             $row = $this->single();
             return $row;
         }
-    return null;
+        return null;
+    }
+    public function trade($id = null, $idUsuario = null, $id2 = null, $idUsuario2 = null)
+    {
+        $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        if (isset($_POST['submit'])) {
+            if ($_POST['duracion'] == '') {
+                messages::setMsg('Porfavor establece una duración para el intercambio.', 'error');
+                return null;
+            }
+            if ($_POST['submit']) {
+                messages::setMsg("Esto funciona por magia negra.", 'successMsg');
+            }
+            $duracion = $post['duracion'];
+            $this->query("INSERT INTO USUARIO_INTERCAMBIA (Obra_ID_OBRA,usuario_idusuario,duracion,confirmacion) 
+                values (:id,:idusuario,:duracion,1),(:id2,:idusuario2,:duracion,1)");
+            $this->bind(":id", $id);
+            $this->bind(":idusuario", $idUsuario);
+            $this->bind(":idusuario2", $idUsuario2);
+            $this->bind(":duracion", $duracion);
+            $this->bind(":id2", $id2);
+            $this->execute();
+            if ($this->lastInsertId()) {
+                messages::setMsg("Oleeeee mi rey", 'successMsg');
+            }
+        } else {
+            $this->query("SELECT id_obra, usuario_idusuario, nombreobra FROM obra 
+              INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario 
+              WHERE id_obra IN (:id, :id2) AND usuario_idusuario IN (:idusuario, :idusuario2)");
+            $this->bind(":id", $id);
+            $this->bind(":id2", $id2);
+            $this->bind(":idusuario", $idUsuario);
+            $this->bind(":idusuario2", $idUsuario2);
+            $this->execute();
+            $rows = $this->resultSet();
+            return $rows;
+        }
+        return null;
     }
 
-    public function trade($id = null)
-    {
 
-    }
-
-    public function viewFromTitle($title = null)
+    public
+    function search($search = null)
     {
-        $this->query("SELECT * FROM obra WHERE titulo LIKE '%" . $title . "%'");
+        $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra, usuario.nombre
+            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario WHERE usuario.nombre LIKE '%" . $search .
+            "%' OR obra.titulo LIKE '%" . $search . "%'");
         $rows = $this->resultSet();
         return $rows;
     }
 
-    public function viewFromAuthor($name = null)
-    {
-        $this->query("SELECT * FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario WHERE usuario.nombre LIKE '%" . $name . "%'");
-        $rows = $this->resultSet();
-        return $rows;
-    }
-
-    public function viewFromGenre($genre = "libre")
+    public
+    function viewFromGenre($genre = "libre") //por defecto es libre para que no de error de PDO
     {
         $genre = trim($genre);
-        $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra FROM obra WHERE genero = '". $genre ."' ORDER BY GENERO");
+        $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra,usuario.nombre
+            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario WHERE genero = '" . $genre . "' ORDER BY GENERO");
         $rows = $this->resultSet();
         return $rows;
     }
 
-    public function viewFromMedium($medium = null)
+    public
+    function viewFromMedium($medium = "foto")
     {
-        $medium=trim($medium);
-        $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra FROM obra WHERE formato = '" . $medium . "'");
+        $medium = trim($medium);
+        $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra, usuario.nombre
+            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario WHERE formato = '" . $medium . "'");
         $rows = $this->resultSet();
         return $rows;
     }
 
 
-    public function add()
+    public
+    function add()
     {
         // Sanitize POST
+
         $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-        $nombreArchivo = pathinfo($_FILES["obra"]["name"], PATHINFO_FILENAME); // Obtener el nombre del archivo sin la extensión
-        $extension = strtolower(pathinfo($_FILES["obra"]["name"], PATHINFO_EXTENSION)); // Obtener la extensión del archivo
-
-        $email = $_SESSION['user_data']['email']; // Obtener el email de la sesión
-
+        $nombreArchivo = pathinfo($_FILES["obra"]["name"], PATHINFO_FILENAME);
+        $extension = strtolower(pathinfo($_FILES["obra"]["name"], PATHINFO_EXTENSION));
+        $email = $_SESSION['user_data']['email'];
         $target_file = $nombreArchivo . "_" . $email . "." . $extension;
-
         if (isset($post['submit'])) {
             if ($post['titulo'] == '' || $post['descripcion'] == '' || $post['formato'] == '' || $_FILES['obra']["name"] == "") {
-                Messages::setMsg('Porfavor, introduce al menos título, descripción, formato y una imagen de tu obra.', 'error');
+                messages::setMsg('Porfavor, introduce al menos título, descripción, formato y una imagen de tu obra.', 'error');
                 return;
             }
-            $this->subirObraImg();
-            // Insert into MySQL
-            $this->query('INSERT INTO obra (titulo,descripcion, formato, genero,usuario_idUsuario,nombreobra) VALUES(:titulo, :descripcion, :formato,:genero,:Usuario_idUsuario,:nombreobra)');
-            $this->bind(':titulo', $post['titulo']);
-            $this->bind(':descripcion', $post['descripcion']);
-            $this->bind(':formato', $post['formato']);
-            $this->bind(':genero', $post['genero']);
-            $this->bind(':nombreobra', $target_file);
-            $this->bind(':Usuario_idUsuario', $_SESSION['user_data']['idusuario']);
-            $this->execute();
 
+            $genero = $post['genero'];
+
+            $this->query("SELECT ID FROM GENERO WHERE NOMBREGENERO = :genero");
+            $this->bind(":genero", $genero);
+            $idgenero = $this->single();
+            if (!$idgenero) {
+                $this->query("INSERT INTO GENERO (NOMBREGENERO) VALUES (:genero)");
+                $this->bind(":genero", $genero);
+                $this->execute();
+                $idgenero = $this->lastInsertId();
+            }
+            if ($idgenero) {
+                $this->query('INSERT INTO obra (titulo,descripcion, formato, genero,usuario_idUsuario,nombreobra) 
+                VALUES(:titulo, :descripcion, :formato,:genero,:Usuario_idUsuario,:nombreobra)');
+                $this->bind(':titulo', $post['titulo']);
+                $this->bind(':descripcion', $post['descripcion']);
+                $this->bind(':formato', $post['formato']);
+                $this->bind(':genero', $idgenero['ID']);
+                $this->bind(':nombreobra', $target_file);
+                $this->bind(':Usuario_idUsuario', $_SESSION['user_data']['idusuario']);
+                $this->execute();
+                $this->subirObraImg();
+            }
+            else{
+                messages::setMsg('Algo ha salido mal, llama a sistemas. ', 'error');
+                header('Location: ' . ROOT_URL . 'shares');
+            }
             if ($this->lastInsertId()) {
                 // Redirect
                 header('Location: ' . ROOT_URL . 'shares');
                 exit();
             }
-
+        } else {
+            $this->query("SELECT nombregenero FROM GENERO");
+            $rows = $this->resultSet();
+            return $rows;
         }
         return;
     }
 
-    private function subirObraImg()
+    public function cargaGeneros(){
+        $this->query("SELECT NOMBREGENERO FROM GENERO");
+        return $this->resultSet();
+    }
+    private
+    function subirObraImg()
     {
-        $target_dir = "./assets/images/"; // Carpeta donde se guardará la foto
-        $nombreArchivo = pathinfo($_FILES["obra"]["name"], PATHINFO_FILENAME); // Obtener el nombre del archivo sin la extensión
-        $extension = strtolower(pathinfo($_FILES["obra"]["name"], PATHINFO_EXTENSION)); // Obtener la extensión del archivo
+        $target_dir = "./assets/images/";
+        $nombreArchivo = pathinfo($_FILES["obra"]["name"], PATHINFO_FILENAME);
+        $extension = strtolower(pathinfo($_FILES["obra"]["name"], PATHINFO_EXTENSION));
 
-        $email = $_SESSION['user_data']['email']; // Obtener el email de la sesión
+        $email = $_SESSION['user_data']['email'];
 
-        $target_file = $target_dir . $nombreArchivo . "_" . $email . "." . $extension; // Ruta completa del archivo con el email añadido
+        $target_file = $target_dir . $nombreArchivo . "_" . $email . "." . $extension;
 
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        // Verificar si se ha enviado un archivo
+
         if (isset($_FILES["obra"]["name"])) {
-            // Verificar si el archivo es una imagen real o una imagen falsa
             $check = getimagesize($_FILES["obra"]["tmp_name"]);
             if ($check !== false) {
                 echo "El archivo es una imagen - " . $check["mime"] . ".";

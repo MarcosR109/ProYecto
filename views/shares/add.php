@@ -20,14 +20,28 @@
             </select>
     	</div>
         <div class="form-group">
-            <select class="form-select" name ="genero" aria-label="Default select example">
+            <select class="form-select" name ="genero" aria-label="Default select example" id="mySelect" onchange="showInput(this)">
                 <option selected>Género</option>
-                <option  value="figurativo">Figurativo</option>
-                <option  value="abstracto">Abstracto</option>
-                <option  value="retrato">Retrato</option>
-                <option  value="libre">Libre</option>
+                <?php foreach ($viewmodel as $item): ?>
+                <option  value="<?php echo $item ['nombregenero']?>"><?php echo $item['nombregenero']?></option>
+                <?php endforeach;  ?>
+                <option value="anadir">Añadir género</option>
             </select>
+            <input placeholder="Añadir género " name="genero" type="text" id="textInput" style=" display: none;">
         </div>
+
+
+        <script>
+            function showInput(select) {
+                var input = document.getElementById("textInput");
+                if (select.value === "anadir") {
+                    input.style.display = "block";
+                } else {
+                    input.style.display = "none";
+                }
+            }
+        </script>
+
         <div class="input-group mb-3">
             <input type="file" class="form-control" id="obra" name="obra">
             <label class="input-group-text" for="inputGroupFile02">Subir obra</label>

@@ -1,5 +1,5 @@
 <?php
-class Shares extends Controller
+class Shares extends controller
 {
     protected function Index()
     {
@@ -22,17 +22,11 @@ class Shares extends Controller
         header('Location:'. ROOT_URL.'shares/index');
         exit();
     }
-    protected function viewFromTitle()
+    protected function search()
     {
-        $title = $this->request["titulo"];
+        $busqueda = $_GET['query'];
         $viewmodel = new ShareModel();
-        $this->returnView($viewmodel->viewFromTitle($title),true);
-    }
-    protected function viewFromAuthor()
-    {
-        $usuar = $this->request["usuario"];
-        $viewmodel = new ShareModel();
-        $this->returnView($viewmodel->viewFromAuthor($usuar),true);
+        $this->returnView($viewmodel->search($busqueda),true);
     }
     protected function viewFromGenre()
     {
@@ -56,7 +50,13 @@ class Shares extends Controller
         $viewmodel = new ShareModel();
         $this->returnView($viewmodel->add(), true);
     }
+    protected function indexUser(){
 
+        $viewmodel = new ShareModel();
+        $id = $this->request['id'];
+        var_dump($id);
+        $this->returnView($viewmodel->indexUser($id),true);
+    }
     protected function update()
     {
         if (!isset($_SESSION['is_logged_in'])) {
@@ -66,5 +66,18 @@ class Shares extends Controller
         $viewmodel = new ShareModel();
         $id = $this->request['id'];
         $this->returnView($viewmodel->update($id), true);
+    }
+    protected function trade()
+    {
+        if (!isset($_SESSION['is_logged_in'])) {
+            header('Location: ' . ROOT_URL . 'shares');
+            exit();
+        }
+        $viewmodel = new ShareModel(); //?id=38&idUsuario=1&id2=43&idUsuario2=3
+        $id = $this->request['id'];
+        $idusuario = $_GET['idUsuario'];
+        $idobra2=$_GET['id2'];
+        $idusuario2=$_GET['idUsuario2'];
+        $this->returnView($viewmodel->trade($id,$idusuario,$idobra2,$idusuario2,1), true);
     }
 }

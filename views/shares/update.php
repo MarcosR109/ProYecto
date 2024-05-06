@@ -1,27 +1,27 @@
 <head><link rel="stylesheet" href="../../assets/css/bootstrap.min.css"></head>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Share Something!</h3>
+        <h3 class="panel-title">Actualizar obra</h3>
     </div>
     <div class="panel-body">
-        <form method="post" action="<?= ROOT_URL . 'shares/update/' . $viewmodel['id_obra'] ?>">
+        <form method="post" action="<?= ROOT_URL . 'shares/update/' . $viewmodel['ID_OBRA'] ?>">
             <div class="form-group">
                 <label>Nombre de la obra</label>
-                <input type="text" name="Titulo" class="form-control" id="Titulo" value="<?php echo $viewmodel['Titulo']; ?>"/>
+                <input type="text" name="TITULO" class="form-control" id="Titulo" value="<?php echo $viewmodel['TITULO']; ?>"/>
             </div>
             <div class="form-group">
                 <label>Descripción</label>
-                <textarea name="Descripcion" class="form-control" id="Descripcion"><?php echo $viewmodel['Descripcion']; ?></textarea>
+                <textarea name="DESCRIPCION" class="form-control" id="Descripcion"><?php echo $viewmodel['DESCRIPCION']; ?></textarea>
             </div>
             <div class="form-group">
                 <label>Género</label>
-                <input type="text" name="Genero" class="form-control" id="Genero" value="<?php echo $viewmodel['Genero']; ?>"/>
+                <input type="text" name="GENERO" class="form-control" id="Genero" value="<?php echo $viewmodel['GENERO']; ?>"/>
             </div>
             <div class="form-group">
                 <label>Formato</label>
-                <input type="text" name="Formato" class="form-control" id="Formato" value="<?php echo $viewmodel['Formato']; ?>"/>
+                <input type="text" name="FORMATO" class="form-control" id="Formato" value="<?php echo $viewmodel['FORMATO']; ?>"/>
             </div>
-            <input class="btn btn-primary" name="submit" type="submit" value="Submit"/>
+            <input class="btn btn-primary" name="submit" type="submit" value="submit"/>
             <a class="btn btn-danger" href="<?php echo ROOT_PATH; ?>shares">Cancel</a>
         </form>
     </div>

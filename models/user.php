@@ -1,5 +1,5 @@
 <?php
-class UserModel extends Model
+class UserModel extends model
 {
     public function register()
     {
@@ -10,7 +10,7 @@ class UserModel extends Model
             $password = md5($post['password']);
 
             if ($post['name'] == '' || $post['email'] == '' || $post['password'] == '') {
-                Messages::setMsg('Please Fill In All Fields', 'error');
+                messages::setMsg('Please Fill In All Fields', 'error');
                 return;
             }
 
@@ -60,7 +60,7 @@ class UserModel extends Model
                 header('Location: ' . ROOT_URL . 'shares');
                 exit();
             } else {
-                Messages::setMsg('Incorrect Login', 'error');
+                messages::setMsg('Incorrect Login', 'error');
             }
         }
         return;

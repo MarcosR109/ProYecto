@@ -1,5 +1,5 @@
 <?php
-class Bootstrap{
+class bootstrap{
 	private $controller;
 	private $action;
 	private $request;
@@ -23,7 +23,7 @@ class Bootstrap{
 		if(class_exists($this->controller)){
 			$parents = class_parents($this->controller);
 			// Check Extend
-			if(in_array("Controller", $parents)){
+			if(in_array("controller", $parents)){
 				if(method_exists($this->controller, $this->action)){
 					return new $this->controller($this->action, $this->request);
 				} else {
@@ -32,13 +32,13 @@ class Bootstrap{
 					return;
 				}
 			} else {
-				// Base Controller Does Not Exist
+				// Base controller Does Not Exist
 				echo '<h1>Base controller not found</h1>';
 				return;
 			}
 		} else {
-			// Controller Class Does Not Exist
-			echo '<h1>Controller class does not exist</h1>';
+			// controller Class Does Not Exist
+			echo '<h1>controller class does not exist</h1>';
 			return;
 		}
 	}

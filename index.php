@@ -1,14 +1,13 @@
 <?php
 // Start Session
 session_start();
-
 // Include Config
 require('config.php');
-
-require('classes/Messages.php');
-require('classes/Bootstrap.php');
-require('classes/Controller.php');
-require('classes/Model.php');
+//error_reporting(0);
+require('classes/messages.php');
+require('classes/bootstrap.php');
+require('classes/controller.php');
+require('classes/model.php');
 
 require('controllers/home.php');
 require('controllers/shares.php');
@@ -20,7 +19,7 @@ require('models/user.php');
 
 
 
-$bootstrap = new Bootstrap($_GET);
+$bootstrap = new bootstrap($_GET);
 $controller = $bootstrap->createController();
 if($controller){
 	$controller->executeAction();

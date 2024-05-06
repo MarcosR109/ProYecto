@@ -1,5 +1,5 @@
 <?php
-class Messages{
+class messages{
 	public static function setMsg($text, $type){
 		if($type == 'error'){
 			$_SESSION['errorMsg'] = $text;

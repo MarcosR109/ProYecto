@@ -1,5 +1,5 @@
 <?php
-abstract class Model{
+abstract class model{
 	protected $dbh;
 	protected $stmt;
 
