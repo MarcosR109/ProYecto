@@ -1,4 +1,5 @@
 <?php
+
 class UserModel extends model
 {
     public function register()
@@ -48,15 +49,26 @@ class UserModel extends model
             $this->bind(':password', $password);
 
             $row = $this->single();
-
-            if ($row) {
+            echo $row['idusuario'];
+            var_dump($row);
+            if ($row['idusuario'] == 1 && $row['email'] == "admin@j.com") {
+                $_SESSION['is_admin'] = true;
                 $_SESSION['is_logged_in'] = true;
                 $_SESSION['user_data'] = array(
                     "idusuario" => $row['idusuario'],
                     "nombre" => $row['nombre'],
                     "email" => $row['email'],
                 );
+                header('Location: ' . ROOT_URL . 'shares');
+                exit();
+            } elseif ($row['idusuario'] != 1 && $row['idusuario']!=null) {
 
+                $_SESSION['is_logged_in'] = true;
+                $_SESSION['user_data'] = array(
+                    "idusuario" => $row['idusuario'],
+                    "nombre" => $row['nombre'],
+                    "email" => $row['email'],
+                );
                 header('Location: ' . ROOT_URL . 'shares');
                 exit();
             } else {

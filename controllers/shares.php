@@ -28,17 +28,11 @@ class Shares extends controller
         $viewmodel = new ShareModel();
         $this->returnView($viewmodel->search($busqueda),true);
     }
-    protected function viewFromGenre()
+    protected function filter()
     {
         $genre = $this->request["id"];
         $viewmodel = new ShareModel();
-        $this->returnView($viewmodel->viewFromGenre($genre),true);
-    }
-    protected function viewFromMedium()
-    {
-        $medium = $this->request["id"];
-        $viewmodel = new ShareModel();
-        $this->returnView($viewmodel->viewFromMedium($medium),true);
+        $this->returnView($viewmodel->filter($genre),true);
     }
 
     protected function add()
@@ -54,7 +48,6 @@ class Shares extends controller
 
         $viewmodel = new ShareModel();
         $id = $this->request['id'];
-        var_dump($id);
         $this->returnView($viewmodel->indexUser($id),true);
     }
     protected function update()

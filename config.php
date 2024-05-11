@@ -1,11 +1,10 @@
 <?php
 
 // Define DB Params
-define("DB_HOST", "localhost:3307");
-define("DB_USER", "root");
-define("DB_PASS", "");
-define("DB_NAME", "trart");
+const DB_HOST = "localhost:3307";
+const DB_USER = "root";
+const DB_PASS = "";
+const DB_NAME = "trart";
 
 // Define URL
-define("ROOT_PATH", "/");
-define("ROOT_URL", "http://localhost:81/");
+const ROOT_URL = "http://localhost:81/";

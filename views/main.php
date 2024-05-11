@@ -1,60 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrArT</title>
     <meta name="author" content="DAW109 - Marcos Daniel Rodríguez">
-    <link rel="icon" href="<?php echo ROOT_URL ?>assets/images/logo.png" type="image/x-icon">
+    <link rel="icon" type="image/x-icon" href="<?= ROOT_URL ?>assets/images/icon.ico">
     <meta name="description"
           content="En esta página pueden encontrarse los usuarios apasionados por el arte para crear su propio catálogo y establecer intercambios con otros usuarios.">
     <!-- Vincula el archivo CSS de Bootstrap -->
     <link rel="stylesheet" href="<?php echo ROOT_URL ?>assets/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Vincula el archivo JS de Bootstrap -->
-    <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= ROOT_URL ?>assets/js/bootstrap.bundle.min.js"></script>
     <style>
-        /* Estilo para la imagen de fondo */
-        .fullscreen-bg {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .fullscreen-bg__img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-        }
-
-        /* Estilo para el botón */
-        .center-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-        }
-
         .logo {
             width: 50px;
+            scale:2.5;
             height: 50px;
         }
     </style>
+</head>
 
 <body>
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-1">
     <div class="container-fluid">
         <a class="navbar-brand" href="<?php echo ROOT_URL ?>">
             <img class="logo"
-                                                                   src="<?php echo ROOT_URL ?>assets/images/logo.png"
-                                                                   alt="Logo"></a>
+                 src="<?php echo ROOT_URL ?>assets/images/image.png"
+                 alt="Logo"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -79,9 +53,11 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
                                     aria-labelledby="navbarDarkDropdownMenuLink">
-                                    <li><a class="dropdown-item"
-                                           href="<?php echo ROOT_URL . '/shares/indexUser/' . $_SESSION['user_data']['idusuario']; ?>"
-                                        ><?php echo $_SESSION['user_data']['email'] ?></a></li>
+                                    <li><?php if (!$_SESSION['is_admin']){ ?>
+                                        <a class="dropdown-item"
+                                           href="<?= ROOT_URL . '/shares/indexUser/' . $_SESSION['user_data']['idusuario']; ?>">
+                                            <?php echo $_SESSION['user_data']['email'] ?> </a></li>
+                                    <?php } ?>
                                     <li><a class="dropdown-item" href=<?php echo ROOT_URL . '/shares' ?>>Ir al
                                             catálogo</a></li>
                                     <li><a class="dropdown-item" href="<?php echo ROOT_URL; ?>users/logout">Cerrar
@@ -91,7 +67,6 @@
                         </ul>
                     </div>
                 <?php else: ?>
-                    <!-- Resto del código para usuarios no autenticados -->
                     <li class="nav-item"><a class="nav-link" href="<?php echo ROOT_URL; ?>users/login">Identificarse</a>
                     </li>
                     <li class="nav-item"><a class="nav-link"
@@ -99,8 +74,6 @@
                 <?php endif; ?>
             </ul>
         </div>
-
-
     </div>
 </nav>
 

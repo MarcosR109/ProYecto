@@ -3,7 +3,7 @@
 session_start();
 // Include Config
 require('config.php');
-//error_reporting(0);
+error_reporting(0);
 require('classes/messages.php');
 require('classes/bootstrap.php');
 require('classes/controller.php');
