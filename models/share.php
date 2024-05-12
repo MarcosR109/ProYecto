@@ -4,16 +4,18 @@ class ShareModel extends model
 {
     public function index()
     {
-        $this->query('SELECT id_obra,titulo,descripcion,genero,formato, nombreobra, usuario.nombre, usuario_idUsuario,nombreGenero
-            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario  INNER JOIN genero ON OBRA.GENERO = genero.ID ORDER BY id_obra DESC');
+        $this->query('SELECT id_obra,titulo,descripcion,genero,formato, nombreobra, usuario.nombre, obra.usuario_idUsuario,nombreGenero,usuario_intercambia.confirmacion
+             FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario  INNER JOIN genero ON OBRA.GENERO = genero.ID
+            LEFT JOIN usuario_intercambia on usuario_intercambia.Obra_ID_OBRA = obra.ID_OBRA ORDER BY id_obra DESC');
         $rows = $this->resultSet();
         return $rows;
     }
 
     public function view($id = null)
     {
-        $this->query("SELECT id_obra,titulo,descripcion,genero,formato,nombreobra, usuario.nombre, usuario_idUsuario, genero.nombreGenero
-            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario  INNER JOIN genero ON genero.ID = obra.GENERO where id_obra=$id");
+        $this->query("SELECT id_obra,titulo,descripcion,genero,formato,nombreobra, usuario.nombre, obra.usuario_idUsuario, genero.nombreGenero, usuario_intercambia.confirmacion
+            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario  INNER JOIN genero ON genero.ID = obra.GENERO  left join usuario_intercambia on obra.id_obra = usuario_intercambia.obra_id_obra where id_obra=$id");
+
         $row = $this->single();
         return $row;
     }
@@ -48,12 +50,21 @@ class ShareModel extends model
         $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
         if (isset($post['submit'])) {
-            // Insert into MySQL
+            $genero = $post['genero'];
+            $generoInput = $post['generoinput'];
+
+            if ($generoInput) {
+                $this->query("INSERT INTO genero (NOMBREGENERO) VALUES (:genero)");
+                $this->bind(":genero", $generoInput);
+                $this->execute();
+                $genero = $this->lastInsertId();
+            }
+
             $this->query('UPDATE obra SET titulo=:titulo, descripcion=:descripcion, formato=:formato, genero=:genero WHERE id_obra =:id');
             $this->bind(':titulo', $post['titulo']);
             $this->bind(':descripcion', $post['descripcion']);
             $this->bind(':formato', $post['formato']);
-            $this->bind(':genero', $post['genero']);
+            $this->bind(':genero', $genero);
             $this->bind(':id', $id);
             $this->execute();
             header('Location: ' . ROOT_URL . 'shares');
@@ -88,12 +99,10 @@ class ShareModel extends model
                 $this->execute();
                 header('Location: ' . ROOT_URL . 'shares');
             }
-        } catch (PDOException $a) { //Si una obra está intercambiada, da error de pdoexception, solo redirige al index y ya.
+        } catch (PDOException $a) {
             header('Location: ' . ROOT_URL . 'shares');
             return;
         }
-        //He decidido no avanzar más con la lógica del intercambio, podría hacer comprobaciones sobre la tabla usuario_intercambia por si la obra
-        //no estuviese disponible y aprovecharlo para pintarlo en la vista.
 
         $this->query("SELECT id_obra, usuario_idusuario, nombreobra, titulo, usuario.nombre FROM obra 
               INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario 
@@ -111,8 +120,8 @@ class ShareModel extends model
     public
     function search($search = null)
     {
-        $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra, usuario.nombre
-            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario WHERE usuario.nombre LIKE '%" . $search .
+        $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra, usuario.nombre, confirmacion
+            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario LEFT JOIN usuario_intercambia ON obra.ID_OBRA = usuario_intercambia.obra_id_obra WHERE usuario.nombre LIKE '%" . $search .
             "%' OR obra.titulo LIKE '%" . $search . "%'");
         $rows = $this->resultSet();
         if (count($rows) <= 0) {
@@ -130,8 +139,8 @@ class ShareModel extends model
         $filtro = $_POST['filtro'];
         $filter = $_POST['filtro1'];
         if ($filtro == "viewFromGenre/") {
-            $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra,usuario.nombre, usuario_idUsuario
-            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario INNER JOIN genero ON obra.GENERO=genero.ID WHERE nombregenero = '" . $filter . "' ORDER BY GENERO");
+            $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra,usuario.nombre, obra.usuario_idUsuario, confirmacion
+            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario INNER JOIN genero ON obra.GENERO=genero.ID LEFT JOIN usuario_intercambia on usuario_intercambia.obra_id_obra = obra.id_obra WHERE nombregenero = '" . $filter . "' ORDER BY GENERO");
             $rows = $this->resultSet();
             if (count($rows) <= 0) {
                 messages::setMsg("No se han encontrado obras con " . $filter . " como género.", "error");
@@ -142,8 +151,8 @@ class ShareModel extends model
         } else {
             $medium = $_POST['filtro2'];
             $medium = trim($medium);
-            $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra, usuario.nombre
-            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario WHERE formato = '" . $medium . "'");
+            $this->query("SELECT id_obra, titulo, descripcion, genero, formato, nombreobra, usuario.nombre, confirmacion, obra.usuario_idUsuario
+            FROM obra INNER JOIN usuario ON obra.usuario_idUsuario = usuario.idusuario left join usuario_intercambia on usuario_intercambia.obra_id_obra = obra.id_obra WHERE formato = '" . $medium . "'");
             $rows = $this->resultSet();
             if (count($rows) <= 0) {
                 header("location: ", "shares");
@@ -165,7 +174,6 @@ class ShareModel extends model
         $extension = strtolower(pathinfo($_FILES["obra"]["name"], PATHINFO_EXTENSION));
         $email = $_SESSION['user_data']['email'];
         $target_file = $nombreArchivo . "_" . $email . "." . $extension;
-        var_dump($post);
         if (isset($post['submit'])) {
             if ($post['titulo'] == '' || $post['descripcion'] == '' || $post['formato'] == '' || $post['genero']=='' || $_FILES['obra']["name"] == "") {
                 messages::setMsg('Porfavor, introduce al menos título, descripción, formato y una imagen de tu obra.', 'error');
@@ -175,7 +183,7 @@ class ShareModel extends model
             $genero = $post['genero'];
             $generoInput = $post['generoinput'];
 
-            if ($genero==null) {
+            if ($generoInput) {
                 $this->query("INSERT INTO genero (NOMBREGENERO) VALUES (:genero)");
                 $this->bind(":genero", $generoInput);
                 $this->execute();
@@ -194,8 +202,6 @@ class ShareModel extends model
             $this->subirObraImg($target_file);
             messages::setMsg('Tu obra se ha subido satisfactoriamente. ', 'success');
             //header('Location: ' . ROOT_URL . 'shares');
-var_dump($post);
-var_dump($target_file);
             if ($this->lastInsertId()) {
                 header('Location: ' . ROOT_URL . 'shares');
                 exit();
@@ -205,10 +211,8 @@ var_dump($target_file);
         {
             $this->query("SELECT id,nombregenero FROM genero");
             $rows = $this->resultSet();
-            var_dump($post);
             return $rows;
         }
-
         return;
     }
 
@@ -223,7 +227,6 @@ var_dump($target_file);
     private
     function subirObraImg($nombreArchivo)
     {
-        var_dump($nombreArchivo);
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($nombreArchivo, PATHINFO_EXTENSION));
         $nombreArchivo = "./assets/images/".$nombreArchivo;
@@ -239,26 +242,23 @@ var_dump($target_file);
             }
         }
 
-        // Verificar si el archivo ya existe
         if (file_exists($nombreArchivo)) {
             echo "Lo siento, el archivo ya existe.";
             $uploadOk = 0;
         }
 
-        // Verificar el tamaño del archivo (en este ejemplo, el límite es de 5MB)
+
         if ($_FILES["obra"]["size"] > 5000000) {
             echo "Lo siento, el archivo es demasiado grande.";
             $uploadOk = 0;
         }
 
-        // Permitir ciertos formatos de archivo
+
         if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
             && $imageFileType != "gif") {
             echo "Lo siento, solo se permiten archivos JPG, JPEG, PNG & GIF.";
             $uploadOk = 0;
         }
-
-        // Verificar si $uploadOk está establecido en 0 por algún error
         if ($uploadOk == 0) {
             echo "Lo siento, tu archivo no fue subido.";
             return false;

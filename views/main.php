@@ -8,10 +8,8 @@
     <link rel="icon" type="image/x-icon" href="<?= ROOT_URL ?>assets/images/icon.ico">
     <meta name="description"
           content="En esta página pueden encontrarse los usuarios apasionados por el arte para crear su propio catálogo y establecer intercambios con otros usuarios.">
-    <!-- Vincula el archivo CSS de Bootstrap -->
     <link rel="stylesheet" href="<?php echo ROOT_URL ?>assets/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- Vincula el archivo JS de Bootstrap -->
     <script src="<?= ROOT_URL ?>assets/js/bootstrap.bundle.min.js"></script>
     <style>
         .logo {

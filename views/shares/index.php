@@ -67,7 +67,7 @@
                                     <p class="card-text"><?php echo $item['descripcion']; ?>.</p>
                                     <p class="card-text"><?= $item['nombreGenero']?></p>
                                     <h5><?php echo $item['nombre']; ?></h5>
-                                    <?php if (isset($_SESSION['is_logged_in']) && $_SESSION['user_data']['idusuario'] != $item['usuario_idUsuario'] && !$_SESSION['is_admin']) { ?>
+                                    <?php if (isset($_SESSION['is_logged_in']) && $_SESSION['user_data']['idusuario'] != $item['usuario_idUsuario'] && !$_SESSION['is_admin'] && $item['confirmacion']==null) { ?>
                                         <a class="btn btn-info"
                                            href="<?php echo ROOT_URL; ?>shares/indexUser/?id=<?= $_SESSION['user_data']['idusuario'] . '&idusuario=' .
                                            $item['usuario_idUsuario'] . '&idobra=' . $item['id_obra'].'&trade='."1" ?>">Intercambiar</a>

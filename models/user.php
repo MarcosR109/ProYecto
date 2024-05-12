@@ -50,7 +50,6 @@ class UserModel extends model
 
             $row = $this->single();
             echo $row['idusuario'];
-            var_dump($row);
             if ($row['idusuario'] == 1 && $row['email'] == "admin@j.com") {
                 $_SESSION['is_admin'] = true;
                 $_SESSION['is_logged_in'] = true;

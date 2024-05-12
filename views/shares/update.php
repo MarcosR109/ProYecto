@@ -7,11 +7,11 @@
         <form method="post" action="<?= ROOT_URL . 'shares/update/' . $viewmodel['ID_OBRA'] ?>">
             <div class="form-group">
                 <label>Nombre de la obra</label>
-                <input type="text" name="TITULO" class="form-control" id="Titulo" value="<?php echo $viewmodel['TITULO']; ?>"/>
+                <input type="text" name="titulo" class="form-control" id="Titulo" value="<?php echo $viewmodel['TITULO']; ?>"/>
             </div>
             <div class="form-group">
                 <label>Descripción</label>
-                <textarea name="DESCRIPCION" class="form-control" id="Descripcion"><?php echo $viewmodel['DESCRIPCION']; ?></textarea>
+                <textarea name="descripcion" class="form-control" id="Descripcion"><?php echo $viewmodel['DESCRIPCION']; ?></textarea>
             </div>
             <div class="form-group">
                 <select class="form-select"   name="formato" aria-label="Default select example">
@@ -20,20 +20,18 @@
                     <option value="cuadro">Cuadro</option>
                 </select>
             </div>
+            <?php $sharemodel = new ShareModel();
+                    $generos=$sharemodel->cargaGeneros(); ?>
             <div class="form-group">
                 <select class="form-select" name ="genero" aria-label="Default select example" id="mySelect" onchange="showInput(this)">
-                    <option selected>Género</option>
-                    <?php $sharemodel = new ShareModel();
-                    $generos=$sharemodel->cargaGeneros();
-                    foreach ($generos as $genero): ?>
-                        <option  value="<?php echo $genero['ID']?>"><?php echo $genero['NOMBREGENERO']?></option>
+                    <option>Género</option>
+                  <?php foreach ($generos as $genero): ?>
+                        <option  value="<?php echo $genero['id']?>"><?php echo $genero['NOMBREGENERO']?></option>
                     <?php endforeach;  ?>
                     <option value="anadir">Añadir género</option>
                 </select>
                 <input placeholder="Añadir género " name="generoinput" type="text" id="textInput" style=" display: none;">
             </div>
-
-
             <script>
                 function showInput(select) {
                     var input = document.getElementById("textInput");
