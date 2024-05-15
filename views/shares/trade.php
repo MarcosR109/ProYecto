@@ -1,20 +1,6 @@
 
-<div class="panel panel-default">
 
-
-    <div class="panel-body">
-        <form method="post"
-
-        <div class="form-group">
-
-        </div>
-
-        </form>
-
-    </div>
-</div>
-
-<div class="container">
+<div class="container mt-4">
     <div class="row">
         <!-- Recurso 1 -->
         <?php $idobra = $viewmodel[1]['id_obra'];

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +36,7 @@
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                             <input type="text" name="name" id="name"
-                                                   class="form-control form-control-lg"/>
+                                                required   class="form-control form-control-lg"/>
                                             <label class="form-label" for="name">Nombre</label>
                                         </div>
                                     </div>
@@ -45,7 +44,7 @@
                                         <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                             <input type="email" name="email" id="email"
-                                                   class="form-control form-control-lg"/>
+                                                required   class="form-control form-control-lg"/>
                                             <label class="form-label" for="email">Email</label>
                                         </div>
                                     </div>
@@ -53,7 +52,7 @@
                                         <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                             <input type="password" name="password" id="password"
-                                                   class="form-control form-control-lg"/>
+                                                  required class="form-control form-control-lg" pattern="^(?=.*\d)(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[-\#\$\.\%\&\*])(?=.*[a-zA-Z]).{8,16}$" minlength="8"/>
                                             <label class="form-label" for="password">Contraseña</label>
                                         </div>
                                     </div>
@@ -74,7 +73,6 @@
                                 <img src="<?php echo ROOT_URL . "assets/images/403403mtsdl.jpg" ?>"
                                      class="img-fluid" style="width: 500px;
                                                        height: 500px" alt="Sample image">
-
                             </div>
                         </div>
                     </div>

@@ -21,7 +21,7 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-1">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-0">
     <div class="container-fluid">
         <a class="navbar-brand" href="<?php echo ROOT_URL ?>">
             <img class="logo"

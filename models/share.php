@@ -69,7 +69,7 @@ class ShareModel extends model
             $this->execute();
             header('Location: ' . ROOT_URL . 'shares');
         } else {
-            $this->query("SELECT ID_OBRA,TITULO,DESCRIPCION,FORMATO,GENERO FROM obra where id_OBRA=$id");
+            $this->query("SELECT ID_OBRA,TITULO,DESCRIPCION,FORMATO,GENERO,nombreobra FROM obra where id_OBRA=$id");
             $row = $this->single();
             return $row;
         }

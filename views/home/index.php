@@ -51,7 +51,7 @@
 </div>
 
 <section class="catalogo">
-    <div class="card-header bg-dark text-light mt-1">
+    <div class="card-header bg-dark text-light mt-0">
         <h1>Explora el catálogo</h1>
     </div>
     <div class="col-md-4">

@@ -1,4 +1,4 @@
-<div class="col-md-11 col-lg-10">
+<div class="col-md-11 col-lg-10 mt-4">
     <div class="container">
         <?php $count = 0; ?>
         <div class="row">
